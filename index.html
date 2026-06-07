@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>한국어 워들</title>
+  <title>한국어 워들 (4글자)</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,8 +17,6 @@
       --correct: #2cb67d;
       --present: #e8b84b;
       --absent: #2e2d45;
-      --key-bg: #2e2d45;
-      --key-text: #fffffe;
       --accent: #7f5af0;
     }
 
@@ -66,7 +64,6 @@
       border-radius: 50%;
       cursor: pointer;
       font-size: 13px;
-      font-family: 'Noto Sans KR', sans-serif;
       transition: border-color 0.2s, color 0.2s;
     }
     #help-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -76,10 +73,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--muted);
       letter-spacing: 0.5px;
       margin: 8px 0 0;
+      font-weight: 500;
     }
 
     #board-container {
@@ -93,32 +91,30 @@
     #board {
       display: grid;
       grid-template-rows: repeat(6, 1fr);
-      gap: 6px;
+      gap: 8px;
     }
 
     .row {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      /* 4글자 단어에 맞추어 4칸으로 변경 */
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
     }
 
     .tile {
-      width: 54px;
-      height: 54px;
+      width: 60px;
+      height: 60px;
       border: 2px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: 6px;
       transition: border-color 0.1s;
-      position: relative;
-      overflow: hidden;
     }
 
     .tile.filled { border-color: var(--muted); }
-
     .tile.correct { background: var(--correct); border-color: var(--correct); color: #fff; }
     .tile.present { background: var(--present); border-color: var(--present); color: #fff; }
     .tile.absent  { background: var(--absent);  border-color: var(--absent);  color: var(--muted); }
@@ -130,7 +126,7 @@
 
     @keyframes pop {
       0%   { transform: scale(1); }
-      50%  { transform: scale(1.12); }
+      50%  { transform: scale(1.15); }
       100% { transform: scale(1); }
     }
     @keyframes shake {
@@ -149,45 +145,42 @@
       60%     { transform: translateY(-8px); }
     }
 
-    #keyboard {
+    #input-container {
       width: 100%;
-      max-width: 480px;
-      padding: 0 8px 24px;
+      max-width: 400px;
+      padding: 0 16px 32px;
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .kb-row {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
+    #word-input {
+      flex: 1;
+      height: 50px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none;
+    }
+    #word-input:focus {
+      border-color: var(--accent);
     }
 
-    .key {
-      height: 52px;
-      min-width: 36px;
-      padding: 0 4px;
-      border-radius: 6px;
-      background: var(--key-bg);
+    #submit-btn {
+      padding: 0 24px;
+      background: var(--accent);
+      color: white;
       border: none;
-      color: var(--key-text);
-      font-size: 14px;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-weight: 500;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.1s;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
     }
-    .key:active { transform: scale(0.95); }
-    .key.wide { min-width: 52px; font-size: 12px; }
-    .key.correct { background: var(--correct); color: #fff; }
-    .key.present { background: var(--present); color: #fff; }
-    .key.absent  { background: #1a1929; color: #555; }
+    #submit-btn:hover { opacity: 0.9; }
 
     #overlay {
       position: fixed;
@@ -214,7 +207,7 @@
     }
     .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
     .modal p  { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 8px; }
-    .modal .answer { font-size: 22px; font-weight: 900; color: var(--accent); margin: 12px 0; letter-spacing: 4px; }
+    .modal .answer { font-size: 24px; font-weight: 900; color: var(--accent); margin: 12px 0; letter-spacing: 4px; }
 
     .example-row { display: flex; gap: 5px; justify-content: center; margin: 12px 0 4px; }
     .ex-tile {
@@ -236,26 +229,14 @@
       border-radius: 8px;
       padding: 10px 28px;
       font-size: 15px;
-      font-family: 'Noto Sans KR', sans-serif;
       font-weight: 700;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
     .modal-btn:hover { opacity: 0.85; }
-    .modal-btn.secondary {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      margin-left: 8px;
-    }
-    .modal-btn.secondary:hover { border-color: var(--muted); color: var(--text); }
-
     hr.modal-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
     @media (max-width: 420px) {
-      .tile { width: 46px; height: 46px; font-size: 17px; }
-      .key { height: 46px; min-width: 30px; font-size: 13px; }
-      .key.wide { min-width: 44px; }
+      .tile { width: 50px; height: 50px; font-size: 20px; }
     }
   </style>
 </head>
@@ -272,7 +253,10 @@
   <div id="board"></div>
 </div>
 
-<div id="keyboard"></div>
+<div id="input-container">
+  <input type="text" id="word-input" maxlength="4" placeholder="4글자 단어 입력" autocomplete="off">
+  <button id="submit-btn">제출</button>
+</div>
 
 <div id="overlay">
   <div class="modal" id="modal-content"></div>
@@ -319,17 +303,7 @@ const HINT_WORDS = {
   "차이":"서로 다른 점","청춘":"젊은 시절","추억":"지난 기억","침묵":"소리 없는 상태"
 };
 
-const KEYBOARD_ROWS = [
-  ["ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ"],
-  ["ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ"],
-  ["⌫","ㅋ","ㅌ","ㅊ","ㅍ","ㅠ","ㅜ","ㅡ","↵"]
-];
-
-let answer, hint, currentRow = 0, currentCol = 0, gameOver = false;
-let grid = Array.from({length:6}, () => Array(5).fill(""));
-let colors = Array.from({length:6}, () => Array(5).fill(""));
-let keyColors = {};
-let composing = "";
+let answer, hint, currentRow = 0, gameOver = false;
 
 function pickWord() {
   const w = WORDS[Math.floor(Math.random() * WORDS.length)];
@@ -344,7 +318,7 @@ function buildBoard() {
     const row = document.createElement("div");
     row.className = "row";
     row.id = `row-${r}`;
-    for (let c = 0; c < 5; c++) {
+    for (let c = 0; c < 4; r++) { // 4칸 짜리 타일 생성
       const tile = document.createElement("div");
       tile.className = "tile";
       tile.id = `tile-${r}-${c}`;
@@ -354,22 +328,22 @@ function buildBoard() {
   }
 }
 
-function buildKeyboard() {
-  const kb = document.getElementById("keyboard");
-  kb.innerHTML = "";
-  KEYBOARD_ROWS.forEach(row => {
-    const div = document.createElement("div");
-    div.className = "kb-row";
-    row.forEach(k => {
-      const btn = document.createElement("button");
-      btn.className = "key" + (k === "⌫" || k === "↵" ? " wide" : "");
-      btn.textContent = k;
-      btn.dataset.key = k;
-      btn.addEventListener("click", () => handleKey(k));
-      div.appendChild(btn);
-    });
-    kb.appendChild(div);
-  });
+// 4칸 보드를 안전하게 만들기 위한 대체 빌드 함수
+function buildBoardFixed() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  for (let r = 0; r < 6; r++) {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.id = `row-${r}`;
+    for (let c = 0; c < 4; c++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.id = `tile-${r}-${c}`;
+      row.appendChild(tile);
+    }
+    board.appendChild(row);
+  }
 }
 
 function setMessage(msg, color) {
@@ -380,59 +354,45 @@ function setMessage(msg, color) {
 
 function getTile(r, c) { return document.getElementById(`tile-${r}-${c}`); }
 
-function updateTile(r, c) {
-  const tile = getTile(r, c);
-  tile.textContent = grid[r][c];
-  if (grid[r][c]) {
-    tile.classList.add("filled");
-    tile.classList.remove("pop");
-    void tile.offsetWidth;
-    tile.classList.add("pop");
-  } else {
-    tile.classList.remove("filled");
-    tile.textContent = "";
-  }
-}
-
-function handleKey(k) {
+// 입력창 타이핑 시 화면 보드에 실시간 반영
+document.getElementById("word-input").addEventListener("input", (e) => {
   if (gameOver) return;
-  if (k === "⌫") { deleteLetter(); return; }
-  if (k === "↵") { submitGuess(); return; }
-  addLetter(k);
-}
-
-function addLetter(ch) {
-  if (currentCol >= 5) return;
-  grid[currentRow][currentCol] = ch;
-  updateTile(currentRow, currentCol);
-  currentCol++;
-}
-
-function deleteLetter() {
-  if (currentCol <= 0) return;
-  currentCol--;
-  grid[currentRow][currentCol] = "";
-  updateTile(currentRow, currentCol);
-}
+  const val = e.target.value.trim();
+  for (let c = 0; c < 4; c++) {
+    const tile = getTile(currentRow, c);
+    if (val[c]) {
+      tile.textContent = val[c];
+      if (!tile.classList.contains("filled")) {
+        tile.classList.add("filled", "pop");
+        setTimeout(() => tile.classList.remove("pop"), 100);
+      }
+    } else {
+      tile.textContent = "";
+      tile.classList.remove("filled");
+    }
+  }
+});
 
 function submitGuess() {
-  if (currentCol < 5) {
+  if (gameOver) return;
+  const inputEl = document.getElementById("word-input");
+  const guess = inputEl.value.trim();
+
+  if (guess.length < 4) {
     shakeRow(currentRow);
-    setMessage("글자를 5개 입력하세요", "var(--present)");
+    setMessage("글자를 4개 모두 입력하세요!", "var(--present)");
     return;
   }
-  const guess = grid[currentRow].join("");
+
   const result = evaluate(guess, answer);
-  colors[currentRow] = result;
   revealRow(currentRow, result, () => {
-    updateKeyColors(grid[currentRow], result);
     if (guess === answer) {
       gameOver = true;
       bounceRow(currentRow);
       setTimeout(() => showResult(true), 1200);
     } else {
       currentRow++;
-      currentCol = 0;
+      inputEl.value = "";
       if (currentRow >= 6) {
         gameOver = true;
         setTimeout(() => showResult(false), 400);
@@ -442,15 +402,16 @@ function submitGuess() {
 }
 
 function evaluate(guess, ans) {
-  const res = Array(5).fill("absent");
+  const res = Array(4).fill("absent");
   const ansArr = ans.split("");
-  const used = Array(5).fill(false);
-  for (let i = 0; i < 5; i++) {
+  const used = Array(4).fill(false);
+  
+  for (let i = 0; i < 4; i++) {
     if (guess[i] === ansArr[i]) { res[i] = "correct"; used[i] = true; }
   }
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     if (res[i] === "correct") continue;
-    for (let j = 0; j < 5; j++) {
+    for (let j = 0; j < 4; j++) {
       if (!used[j] && guess[i] === ansArr[j]) { res[i] = "present"; used[j] = true; break; }
     }
   }
@@ -466,7 +427,7 @@ function revealRow(r, result, cb) {
       setTimeout(() => { tile.classList.add(color); }, 150);
     }, c * DELAY);
   });
-  setTimeout(cb, 5 * DELAY + 300);
+  setTimeout(cb, 4 * DELAY + 300);
 }
 
 function shakeRow(r) {
@@ -477,7 +438,7 @@ function shakeRow(r) {
 }
 
 function bounceRow(r) {
-  for (let c = 0; c < 5; c++) {
+  for (let c = 0; c < 4; c++) {
     setTimeout(() => {
       const tile = getTile(r, c);
       tile.classList.add("bounce");
@@ -485,34 +446,19 @@ function bounceRow(r) {
   }
 }
 
-function updateKeyColors(letters, result) {
-  const priority = {correct:3, present:2, absent:1};
-  letters.forEach((ch, i) => {
-    const cur = keyColors[ch];
-    if (!cur || priority[result[i]] > priority[cur]) keyColors[ch] = result[i];
-  });
-  document.querySelectorAll(".key").forEach(btn => {
-    const k = btn.dataset.key;
-    if (keyColors[k]) {
-      btn.classList.remove("correct","present","absent");
-      btn.classList.add(keyColors[k]);
-    }
-  });
-}
-
 function showResult(won) {
   const modal = document.getElementById("modal-content");
   const tries = currentRow + (won ? 1 : 0);
   modal.innerHTML = won
-    ? `<h2>🎉 정답!</h2>
-       <p style="font-size:24px;font-weight:900;color:var(--correct);letter-spacing:4px;margin:12px 0">${answer}</p>
+    ? `<h2>🎉 정답입니다!</h2>
+       <p style="font-size:26px;font-weight:900;color:var(--correct);letter-spacing:4px;margin:12px 0">${answer}</p>
        <p>${tries}번 만에 맞추셨어요!</p>
-       <p style="margin-top:8px;color:var(--muted)">힌트: ${hint}</p>
+       <p style="margin-top:8px;color:var(--muted)">뜻/힌트: ${hint}</p>
        <button class="modal-btn" onclick="newGame()">다시 시작</button>`
-    : `<h2>😢 아쉬워요</h2>
-       <p>정답은:</p>
+    : `<h2>😢 아쉽네요</h2>
+       <p>정답은 다음과 같습니다.</p>
        <div class="answer">${answer}</div>
-       <p style="color:var(--muted)">힌트: ${hint}</p>
+       <p style="color:var(--muted)">뜻/힌트: ${hint}</p>
        <button class="modal-btn" onclick="newGame()">다시 시작</button>`;
   document.getElementById("overlay").classList.add("show");
 }
@@ -521,23 +467,20 @@ function showHelp() {
   const modal = document.getElementById("modal-content");
   modal.innerHTML = `
     <h2>게임 방법</h2>
-    <p>5글자 한국어 단어를 6번 안에 맞추세요!</p>
+    <p>4글자 한국어 단어를 6번 안에 맞추세요!</p>
     <hr class="modal-divider">
-    <p style="text-align:left;font-size:13px;margin-bottom:6px">각 글자의 색상:</p>
     <div class="example-row">
-      <div class="ex-tile correct">사</div><div class="ex-tile">랑</div><div class="ex-tile">해</div><div class="ex-tile">요</div><div class="ex-tile">!</div>
+      <div class="ex-tile correct">사</div><div class="ex-tile">랑</div><div class="ex-tile">노</div><div class="ex-tile">래</div>
     </div>
-    <p style="font-size:13px;color:var(--correct);margin-bottom:10px">🟢 <b>초록</b> = 정확한 위치</p>
+    <p style="font-size:13px;color:var(--correct);margin-bottom:10px">🟢 <b>초록</b> = 글자와 위치가 모두 일치</p>
     <div class="example-row">
-      <div class="ex-tile">사</div><div class="ex-tile present">랑</div><div class="ex-tile">해</div><div class="ex-tile">요</div><div class="ex-tile">!</div>
+      <div class="ex-tile">사</div><div class="ex-tile present">랑</div><div class="ex-tile">노</div><div class="ex-tile">래</div>
     </div>
-    <p style="font-size:13px;color:var(--present);margin-bottom:10px">🟡 <b>노랑</b> = 단어에 있지만 위치 틀림</p>
+    <p style="font-size:13px;color:var(--present);margin-bottom:10px">🟡 <b>노랑</b> = 단어에 포함되나 위치가 다름</p>
     <div class="example-row">
-      <div class="ex-tile">사</div><div class="ex-tile">랑</div><div class="ex-tile absent">해</div><div class="ex-tile">요</div><div class="ex-tile">!</div>
+      <div class="ex-tile">사</div><div class="ex-tile">랑</div><div class="ex-tile absent">노</div><div class="ex-tile">래</div>
     </div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">⬛ <b>회색</b> = 단어에 없음</p>
-    <hr class="modal-divider">
-    <p style="font-size:12px;color:var(--muted)">키보드로 자음/모음을 조합해 입력하세요</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">⬛ <b>회색</b> = 단어에 포함되지 않는 글자</p>
     <button class="modal-btn" onclick="closeOverlay()">시작하기</button>`;
   document.getElementById("overlay").classList.add("show");
 }
@@ -548,30 +491,21 @@ function closeOverlay() {
 
 function newGame() {
   closeOverlay();
-  currentRow = 0; currentCol = 0; gameOver = false;
-  grid = Array.from({length:6}, () => Array(5).fill(""));
-  colors = Array.from({length:6}, () => Array(5).fill(""));
-  keyColors = {};
-  composing = "";
+  currentRow = 0; gameOver = false;
+  const inputEl = document.getElementById("word-input");
+  inputEl.value = "";
+  inputEl.disabled = false;
   pickWord();
-  buildBoard();
-  buildKeyboard();
+  buildBoardFixed();
   setMessage(`힌트: ${hint}`);
+  inputEl.focus();
 }
 
+document.getElementById("submit-btn").addEventListener("click", submitGuess);
+document.getElementById("word-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitGuess();
+});
 document.getElementById("help-btn").addEventListener("click", showHelp);
-document.getElementById("overlay").addEventListener("click", (e) => {
-  if (e.target === document.getElementById("overlay") && !gameOver) closeOverlay();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (gameOver) return;
-  const k = e.key;
-  if (k === "Backspace") { handleKey("⌫"); return; }
-  if (k === "Enter") { handleKey("↵"); return; }
-  const hangul = "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅛㅜㅠㅡㅣ";
-  if (hangul.includes(k)) { handleKey(k); }
-});
 
 window.newGame = newGame;
 window.closeOverlay = closeOverlay;
